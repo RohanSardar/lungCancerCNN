@@ -1,0 +1,12 @@
+ipykernel
+jupyterlab
+numpy
+matplotlib
+scikit-learn
+seaborn
+fastapi
+uvicorn
+python-multipart
+--extra-index-url https://download.pytorch.org/whl/cu130
+torch 
+torchvision

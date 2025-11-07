@@ -1,0 +1,52 @@
+from fastapi import FastAPI, File, UploadFile, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
+import torch
+from torchvision import transforms
+from PIL import Image
+from model import LungCNN
+import io
+import os
+
+app = FastAPI()
+templates = Jinja2Templates(directory='templates')
+app.mount('/static', StaticFiles(directory='static'), name='static')
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "checkpoints", "model.pth")
+
+model = LungCNN(num_classes=3)
+if os.path.exists(MODEL_PATH):
+    model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
+else:
+    raise FileNotFoundError(f"Model file not found at {MODEL_PATH}")
+model.to(device)
+model.eval()
+
+CLASS_NAMES = ['Bengin', 'Malignant', 'Normal'] 
+
+transform = transforms.Compose([
+    transforms.Resize((128, 128)),
+    transforms.ToTensor(),
+])
+
+@app.get('/', response_class=HTMLResponse)
+async def home(request: Request):
+    return templates.TemplateResponse('index.html', {'request': request})
+
+@app.post('/predict')
+async def predict(request: Request, file: UploadFile = File(...)):
+    contents = await file.read()
+    image = Image.open(io.BytesIO(contents)).convert('RGB')
+    img_tensor = transform(image).unsqueeze(0).to(device)
+
+    with torch.no_grad():
+        outputs = model(img_tensor)
+        _, predicted = torch.max(outputs, 1)
+        pred_class = CLASS_NAMES[predicted.item()]
+
+    return templates.TemplateResponse(
+        'index.html',
+        {'request': request, 'prediction': pred_class, 'filename': file.filename}
+    )

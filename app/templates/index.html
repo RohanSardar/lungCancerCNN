@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lung Cancer Detection</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Lung Cancer Detection</h1>
+    <form action="/predict" enctype="multipart/form-data" method="post">
+      <input type="file" name="file" accept="image/*" required>
+      <button type="submit">Classify</button>
+    </form>
+
+    {% if prediction %}
+      <div class="result">
+        <h3>Predicted Class: <span>{{ prediction }}</span></h3>
+        <p>File: {{ filename }}</p>
+      </div>
+    {% endif %}
+
+    <div class="info-section">
+      <br><br>
+      <h2>Model & Dataset Information</h2>
+      <p><strong>Model:</strong> Convolutional Neural Network (CNN)</p>
+      <p><strong>Dataset:</strong> IQ-OTH/NCCD lung cancer dataset</p>
+      <p><strong>Training Accuracy:</strong> 94.13%</p>
+      <p><strong>Validation Accuracy:</strong> 96.95%</p>
+      <p><strong>Epochs Trained:</strong> 50</p>
+      <p><strong>Framework:</strong> PyTorch</p>
+    </div>
+  </div>
+  
+</body>
+<footer>
+  Made by <a href="https://linktr.ee/rohansardar" target="_blank">Rohan Sardar</a>
+</footer>
+</html>
