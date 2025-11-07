@@ -10,8 +10,14 @@ import io
 import os
 
 app = FastAPI()
-templates = Jinja2Templates(directory='templates')
-app.mount('/static', StaticFiles(directory='static'), name='static')
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
+app.mount(
+    "/static",
+    StaticFiles(directory=os.path.join(BASE_DIR, "static")),
+    name="static"
+)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "checkpoints", "model.pth")
@@ -50,4 +56,5 @@ async def predict(request: Request, file: UploadFile = File(...)):
         'index.html',
         {'request': request, 'prediction': pred_class, 'filename': file.filename}
     )
+
 
