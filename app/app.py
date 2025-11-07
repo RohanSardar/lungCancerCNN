@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 import torch
 from torchvision import transforms
 from PIL import Image
-from model import LungCNN
+from app.model import LungCNN
 import io
 import os
 
@@ -50,3 +50,4 @@ async def predict(request: Request, file: UploadFile = File(...)):
         'index.html',
         {'request': request, 'prediction': pred_class, 'filename': file.filename}
     )
+
