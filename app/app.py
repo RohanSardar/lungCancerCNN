@@ -30,7 +30,7 @@ else:
 model.to(device)
 model.eval()
 
-CLASS_NAMES = ['Bengin', 'Malignant', 'Normal'] 
+CLASS_NAMES = ['Benign', 'Malignant', 'Normal'] 
 
 transform = transforms.Compose([
     transforms.Resize((128, 128)),
