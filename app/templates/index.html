@@ -17,6 +17,10 @@
       <div class="result">
         <h3>Predicted Class: <span>{{ prediction }}</span></h3>
         <p>File: {{ filename }}</p>
+
+        {% if image_url %}
+          <img src="{{ image_url }}" alt="Uploaded Image" style="max-width:300px; margin-top:10px; border-radius:10px;">
+        {% endif %}
       </div>
     {% endif %}
 
