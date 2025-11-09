@@ -8,15 +8,16 @@ from PIL import Image
 from app.model import LungCNN
 import io
 import os
+import base64
 
 app = FastAPI()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, 'templates'))
 app.mount(
-    "/static",
-    StaticFiles(directory=os.path.join(BASE_DIR, "static")),
-    name="static"
+    '/static',
+    StaticFiles(directory=os.path.join(BASE_DIR, 'static')),
+    name='static'
 )
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -26,7 +27,7 @@ model = LungCNN(num_classes=3)
 if os.path.exists(MODEL_PATH):
     model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
 else:
-    raise FileNotFoundError(f"Model file not found at {MODEL_PATH}")
+    raise FileNotFoundError(f'Model file not found at {MODEL_PATH}')
 model.to(device)
 model.eval()
 
@@ -52,9 +53,17 @@ async def predict(request: Request, file: UploadFile = File(...)):
         _, predicted = torch.max(outputs, 1)
         pred_class = CLASS_NAMES[predicted.item()]
 
+    buffered = io.BytesIO()
+    image.save(buffered, format='PNG')
+    img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')
+    image_url = f'data:image/png;base64,{img_str}'
+
     return templates.TemplateResponse(
         'index.html',
-        {'request': request, 'prediction': pred_class, 'filename': file.filename}
+        {
+            'request': request,
+            'prediction': pred_class,
+            'filename': file.filename,
+            'image_url': image_url
+        }
     )
-
-
