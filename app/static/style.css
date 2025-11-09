@@ -39,7 +39,7 @@ button {
   border-radius: 10px;
 }
 
-info-section {
+.info-section {
   margin-top: 30px;
   padding: 15px;
   background: #f0f4ff;
@@ -76,41 +76,4 @@ footer a {
 
 footer a:hover {
   text-decoration: underline;
-}
-
-@media (max-width: 600px) {
-  body {
-    padding: 25px 10px;
-  }
-
-  .container {
-    width: 95%;
-    padding: 25px 15px;
-    border-radius: 12px;
-  }
-
-  h1 {
-    font-size: 1.6em;
-  }
-
-  button {
-    width: 100%;
-    padding: 12px;
-    font-size: 1em;
-  }
-
-  .info-section {
-    text-align: center;
-    padding: 15px;
-  }
-
-  .info-section p {
-    font-size: 14px;
-  }
-
-  footer {
-    font-size: 0.9em;
-    padding: 12px;
-    position: relative;
-  }
 }
