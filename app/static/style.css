@@ -41,13 +41,14 @@ button {
 
 .info-section {
   margin-top: 30px;
-  padding: 15px;
+  padding: 15px 20px;
   background: #f0f4ff;
   border-radius: 10px;
-  text-align: left;
+  text-align: center;
 }
 
 .info-section h2 {
+  margin-top: 0;
   text-align: center;
   color: #0056b3;
 }
